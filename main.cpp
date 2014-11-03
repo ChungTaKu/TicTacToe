@@ -1,6 +1,7 @@
 
 #include <vector>
 #include <iostream>
+#include <string>
 using namespace std;
 
 /***************************
@@ -245,26 +246,29 @@ void TTTGame::selectSlotForPlayer(int pid, int *n) {
  *        Main             *
  ***************************/
 
-void main(void) {
+int main(void) {
 
 _START_THE_GAME:
-    system("CLS");
+    cout << string(100, '\n');
     cout << "**************************************" << endl;
     cout << "*      Name:   Tic-Tac-Toe Game      *" << endl;
     cout << "*      Author: Chung-Ta Ku           *" << endl;
     cout << "*      Date:   11/03/14              *" << endl;
-    cout << "**************************************" << endl;
+    cout << "**************************************" << endl << endl;
 
+    // get first player info
     cout << "Do you want to play first ? (Yes:1 No:0) ";
     char c = ' ';
     do { cin >> c; } while (!isdigit(c) || (c != '0' && c != '1'));
     int manPlayFirst = c - '0';
 
+    // init the game with player types
     int player[2];
     player[0] = manPlayFirst ? TYPE_MAN : TYPE_PC;
     player[1] = manPlayFirst ? TYPE_PC : TYPE_MAN;
     TTTGame game(player[0], player[1]);
     
+    // play in turns
     int curPlayerId = 0;
     while (game.winner == WINNER_UNKNOWN) {
         int slot = -1;
@@ -275,7 +279,7 @@ _START_THE_GAME:
             cout << "PLAYER " << curPlayerId << ": Enter your slot num (0~8): ";
             do { cin >> c; } while (!isdigit(c) || (c-'0') < 0 || (c-'8') > 0 || game.isOccupied(c-'0'));
             slot = c - '0';
-            system("CLS");
+            cout << string(100, '\n');
         }
         // man's or pc's turn
         game.selectSlotForPlayer(curPlayerId, &slot);
@@ -284,16 +288,20 @@ _START_THE_GAME:
         curPlayerId = !curPlayerId;
     }
 
+    // show result
     if (game.winner == WINNER_TIE) {
         cout << "!!!!!!!  It's a tie game! !!!!!!!" << endl;
     } else {
         cout << "!!!!!!! Player " << game.winner << " (" << ((player[game.winner]==TYPE_MAN)?"MAN":"PC") << ") won !!!!!!!" << endl << endl;;
     }
 
+    // ask replay
     cout << "Replay ? (Yes:1 No:0) ";
     do { cin >> c; } while (!isdigit(c) || (c != '0' && c != '1'));
     int replay = c - '0';
 
     if (replay)
         goto _START_THE_GAME;
+    
+    return 0;
 }
